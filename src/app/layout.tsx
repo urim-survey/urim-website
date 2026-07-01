@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import FloatingCallButton from "../components/FloatingCallButton";
 
 export const metadata: Metadata = {
   title: "횡성우림측량",
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <FloatingCallButton />
       </body>
     </html>
   );

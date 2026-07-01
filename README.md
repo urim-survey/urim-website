@@ -20,6 +20,48 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Project Notes (우림측량)
+
+This repository contains the 우림측량 website scaffold implemented with Next.js + TypeScript + Tailwind.
+
+### Local development
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:3000 to view the site.
+
+### Images / Assets
+
+Place brand images in `public/images/` using the filenames below (placeholders expected):
+
+- `hero-main.jpg` — 홈 히어로 배경
+- `service-dev.jpg` — 개발행위허가 섹션
+- `service-farm.jpg` — 농지전용 섹션
+- `service-solar.jpg` — 태양광 섹션
+- `about-office.jpg` — 회사소개 배너
+- `process-bg.jpg` — 업무절차 배너
+- `cta-band.jpg` — 하단 CTA 배경
+
+### Supabase (문의폼 / 블로그)
+
+The site includes a placeholder API at `/api/contact`. To persist submissions to Supabase, create a Supabase project and add the keys to environment variables, then replace the API implementation to call Supabase.
+
+Environment variables (example):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
+
+### Deploy
+
+Deploy to Vercel by connecting the repository and setting the above environment variables for production.
+
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

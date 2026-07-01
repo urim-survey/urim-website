@@ -86,6 +86,17 @@ npx skills add bradautomates/claude-video -y
 /reload-plugins
 ```
 
+### 3단계: 지금까지 이 프로젝트에서 실제 사용한 스킬 확인 후 설치
+새 PC로 옮기면 위 1~2단계 설치만으로는 부족할 수 있음. 아래 순서로 빠진 게 없는지 확인:
+
+1. Claude Code에서 사용 가능한 스킬 목록 확인 (세션 시작 시 시스템 안내 또는 `/plugin` 관련 명령으로 설치된 플러그인 목록 조회)
+2. 이 프로젝트 작업 중 실제로 쓴 스킬과 비교:
+   - `superpowers:*` (using-superpowers, verification-before-completion 등) — 2단계에서 설치됨
+   - `vercel:deploy`, `vercel:nextjs` 등 Vercel 관련 스킬 — Vercel 플러그인이 기본 연동되어 있으면 별도 설치 불필요, 없으면 Vercel 공식 플러그인 마켓플레이스에서 설치
+   - 내장 `verify`, `run`, `code-review` 등 — Claude Code 자체에 번들되어 오는 스킬이라 보통 별도 설치 불필요
+3. 목록에 없는(=새로 나타난) 스킬을 발견하면, 그 스킬이 어느 마켓플레이스/플러그인 소속인지 확인 후 `/plugin marketplace add` + `/plugin install`로 설치하고 이 표에 명령어 추가
+4. 설치 후 `/reload-plugins`로 반영 확인
+
 ## 작업 이력
 
 ### 초기 세팅
@@ -100,8 +111,18 @@ npx skills add bradautomates/claude-video -y
 - [x] 업체 실제 정보 확보 (업체명/주소/전화/서비스 6종, 구글비즈니스 기반)
 - [x] 디자인 방향 확정: 네이비 → 완전 모노톤, Noto Sans KR → Pretendard
 - [x] 설계 문서 작성·커밋: `docs/superpowers/specs/2026-07-01-homepage-redesign-design.md`
-- [ ] 구현 계획(writing-plans) 수립
-- [ ] 실제 구현 (Tailwind 재작성 + Framer Motion 애니메이션)
+- [x] 구현 계획(writing-plans) 수립: `docs/superpowers/plans/2026-07-01-homepage-redesign.md`
+- [x] 실제 구현 (Tailwind 재작성 + Framer Motion 애니메이션, 공용 컴포넌트 + 7페이지 전부 재작성)
+
+### 2026-07-02: 모바일 헤더 개선 + 프로덕션 배포
+- [x] 모바일 헤더 재설계: 햄버거 버튼 제거, 회사소개/서비스안내/업무절차/블로그/FAQ 5개 메뉴 로고 아래 항상 노출 (`Header.tsx`)
+- [x] 전화 아이콘 플로팅 버튼 신규 추가, 모바일 우하단 고정 (`FloatingCallButton.tsx`, `layout.tsx`)
+- [x] Playwright로 모바일 뷰포트 실제 렌더/클릭/스크롤 검증 (verify 스킬)
+- [x] Vercel 프로덕션 배포 완료: https://urim-survey.vercel.app
+- [x] 프로젝트를 친구 "쏜"에게 전달하는 방법 논의 — 두 가지 경로 정리
+  - GitHub 저장소 + Vercel 프로젝트 소유권 이관 (온라인 이관, 계정 인증 필요)
+  - USB로 폴더 직접 복사 후 쏜 본인 Vercel 계정으로 재배포 (`.vercel`, `.env.local`, `node_modules`, `.next` 제외하고 복사)
+- [ ] 로컬 미커밋 변경사항(Header/layout/이미지 등) 커밋 — 아직 미완료
 
 ## 다음 작업 목록
 
