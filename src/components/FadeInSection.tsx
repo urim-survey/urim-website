@@ -10,7 +10,7 @@ const staggerContainer = {
 
 const staggerItem = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } as any },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
 type FadeProps = {
@@ -25,7 +25,7 @@ export function FadeInSection({ children, className }: FadeProps) {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, ease: "easeOut" } as any}
+      transition={{ duration: 0.6, ease: "easeOut" as const }}
     >
       {children}
     </motion.div>
