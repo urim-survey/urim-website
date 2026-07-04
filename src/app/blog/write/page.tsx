@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -12,7 +12,6 @@ const TipTapEditor = dynamic(() => import("../../../components/TipTapEditor"), {
 });
 
 function slugify(text: string) {
-  // 영문/숫자만 추출해 URL-safe 기반 생성, 한글 제목은 "post"로 대체
   const base = text
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
@@ -21,22 +20,87 @@ function slugify(text: string) {
   return (base || "post") + "-" + Date.now();
 }
 
+// ── 비밀번호 게이트 ───────────────────────────────────────────────────────────
+function PasswordGate({ onAuth }: { onAuth: () => void }) {
+  const [pw, setPw] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    const res = await fetch("/api/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: pw }),
+    });
+
+    if (res.ok) {
+      sessionStorage.setItem("blog_auth", "1");
+      onAuth();
+    } else {
+      setError("비밀번호가 틀렸습니다.");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="w-full max-w-sm">
+        <h1 className="text-xl font-bold text-ink mb-6 text-center">관리자 확인</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <input
+            type="password"
+            value={pw}
+            onChange={(e) => setPw(e.target.value)}
+            placeholder="비밀번호를 입력하세요"
+            autoFocus
+            className="w-full px-4 py-3 border border-line rounded-lg text-ink placeholder:text-secondary focus:outline-none focus:border-ink"
+          />
+          {error && (
+            <p className="text-sm text-red-600">{error}</p>
+          )}
+          <button
+            type="submit"
+            disabled={loading || !pw}
+            className="w-full py-3 bg-ink text-white rounded-lg font-medium hover:bg-hover transition-colors disabled:opacity-50"
+          >
+            {loading ? "확인 중..." : "확인"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function WritePage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [authed, setAuthed] = useState(false);
+  const [checking, setChecking] = useState(true);  // 세션 확인 중
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [coverImage, setCoverImage] = useState(""); // 업로드 후 저장될 public URL
-  const [previewUrl, setPreviewUrl] = useState(""); // 미리보기용 로컬 URL
+  const [coverImage, setCoverImage] = useState("");
+  const [previewUrl, setPreviewUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  // 이미 인증된 세션인지 확인
+  useEffect(() => {
+    if (sessionStorage.getItem("blog_auth") === "1") {
+      setAuthed(true);
+    }
+    setChecking(false);
+  }, []);
 
   const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 미리보기 즉시 표시
     setPreviewUrl(URL.createObjectURL(file));
     setUploading(true);
     setError("");
@@ -88,6 +152,13 @@ export default function WritePage() {
     router.push("/blog");
   };
 
+  // 세션 확인 중 빈 화면
+  if (checking) return null;
+
+  // 미인증 → 비밀번호 화면
+  if (!authed) return <PasswordGate onAuth={() => setAuthed(true)} />;
+
+  // 인증 완료 → 글쓰기 화면
   return (
     <div className="container py-12 max-w-3xl">
       <h1 className="text-2xl font-bold text-ink mb-8">새 글 작성</h1>
