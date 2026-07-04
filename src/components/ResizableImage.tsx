@@ -1,5 +1,5 @@
-import { mergeAttributes, Node } from "@tiptap/core";
-import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
+import { mergeAttributes, Node, type CommandProps } from "@tiptap/core";
+import { NodeViewWrapper, ReactNodeViewRenderer, type NodeViewProps } from "@tiptap/react";
 import { useRef } from "react";
 
 declare module "@tiptap/core" {
@@ -12,15 +12,10 @@ declare module "@tiptap/core" {
 
 type Align = "left" | "center" | "right";
 
-interface ViewProps {
-  node: { attrs: { src: string; alt?: string; width?: number | null; align?: Align | null } };
-  updateAttributes: (attrs: object) => void;
-  selected: boolean;
-}
-
-function ResizableImageView({ node, updateAttributes, selected }: ViewProps) {
+function ResizableImageView({ node, updateAttributes, selected }: NodeViewProps) {
   const imgRef = useRef<HTMLImageElement>(null);
-  const { src, alt, width, align = "center" } = node.attrs;
+  const attrs = node.attrs as { src: string; alt?: string; width?: number | null; align?: Align | null };
+  const { src, alt, width, align = "center" } = attrs;
 
   // 정렬에 따른 마진 스타일
   const marginStyle: React.CSSProperties =
@@ -166,7 +161,7 @@ export const ResizableImage = Node.create({
     return {
       setImage:
         (options: { src: string; alt?: string; title?: string }) =>
-        ({ commands }: { commands: { insertContent: (c: unknown) => boolean } }) => {
+        ({ commands }: CommandProps) => {
           return commands.insertContent({ type: this.name, attrs: options });
         },
     };
