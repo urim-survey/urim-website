@@ -9,7 +9,7 @@ type BlogCardProps = {
 
 export default function BlogCard({ slug, title, date, imageSrc }: BlogCardProps) {
   return (
-    <Link href={`/blog/${slug}`} className="group block">
+    <Link href={`/blog/${encodeURIComponent(slug)}`} className="group block">
       <div
         className="aspect-[4/3] bg-bg-soft bg-cover bg-center"
         style={{ backgroundImage: `url(${imageSrc})` }}

@@ -41,6 +41,7 @@ export default function Home() {
         imageSrc="/images/hero-main.jpg"
         imageAlt="횡성우림측량 현장 사진"
         size="full"
+        priority
       >
         <div className="mt-8 flex gap-4">
           <Button href="/contact" variant="inverted">상담 문의하기</Button>

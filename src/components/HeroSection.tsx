@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { FadeInSection } from "./FadeInSection";
 
 type HeroSectionProps = {
@@ -8,6 +9,7 @@ type HeroSectionProps = {
   imageSrc: string;
   imageAlt: string;
   size?: "full" | "compact";
+  priority?: boolean;
   children?: ReactNode;
 };
 
@@ -18,17 +20,20 @@ export default function HeroSection({
   imageSrc,
   imageAlt,
   size = "compact",
+  priority = false,
   children,
 }: HeroSectionProps) {
   const heightClass = size === "full" ? "h-[520px] md:h-[640px]" : "h-[280px] md:h-[320px]";
 
   return (
-    <section className={`relative w-full ${heightClass} overflow-hidden bg-hover`}>
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${imageSrc})` }}
-        role="img"
-        aria-label={imageAlt}
+    <section className={`relative w-full ${heightClass} overflow-hidden bg-black`}>
+      <Image
+        src={imageSrc}
+        alt={imageAlt}
+        fill
+        priority={priority}
+        className="object-cover object-center"
+        sizes="100vw"
       />
       <div className="absolute inset-0 bg-black/40" />
       <div className="container relative z-10 flex flex-col justify-center h-full">
