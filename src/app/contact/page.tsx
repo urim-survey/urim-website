@@ -9,8 +9,17 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
-    alert('전송되었습니다.');
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    });
+    if (res.ok) {
+      alert('문의가 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.');
+      setForm({ name: '', phone: '', type: '개발행위허가', message: '' });
+    } else {
+      alert('전송 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+    }
   };
 
   return (
