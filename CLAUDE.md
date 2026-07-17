@@ -11,9 +11,9 @@
 
 ### 사이트 정보
 - 공개 사이트: https://urim-website.vercel.app
-- 관리자 페이지: https://urim-website.vercel.app/admin/blog
 - GitHub: https://github.com/urim-survey/urim-website
 - 로컬 폴더: C:\Users\c\Desktop\urim-survey
+- 블로그 글쓰기·수정: 로컬 전용 (`npm run dev` 실행 후 `localhost:3000/blog/write`) — 배포 사이트에서는 접근 불가
 
 ### 업체 정보
 - 업체명: 횡성우림측량
@@ -21,14 +21,15 @@
 - 주소: 강원특별자치도 횡성군 태기로 16, 3층 302호
 - 업종: 토지측량 및 인허가 전문 (개발행위·농지전용·산지전용·태양광·도로점용·현황측량)
 - 운영시간: 평일 09:00~19:00
-- 카카오톡: 추후 추가 예정
+- 카카오톡: `/contact` 페이지에 상담 버튼은 만들어둠, 채널 개설 후 URL만 연결하면 됨 (아직 미개설)
 
 ### 기술 스택
 - 프레임워크: Next.js (App Router) + TypeScript + Tailwind CSS
-- 데이터베이스: Supabase (아직 미연동 — 문의폼/블로그는 화면만 구현됨)
+- 콘텐츠 저장: 블로그 글은 Git 저장소 안 마크다운 파일(`content/posts/*.md`) + 이미지는 `public/blog-images/` — 별도 데이터베이스 없음
+- 문의상담: 폼 없이 전화·카카오톡 상담으로 안내
 - 배포: Vercel (GitHub 연동)
 - 블로그 에디터: TipTap
-- 폴더구조: app 방식 (src 폴더 없이 최상위 app/)
+- 폴더구조: `src/app` 방식 (src 폴더 사용)
 
 ---
 
@@ -36,14 +37,15 @@
 
 | 페이지 | URL | 파일 경로 |
 |--------|-----|-----------|
-| 홈 | / | app/page.tsx |
-| 회사소개 | /about | app/about/page.tsx |
-| 서비스안내 | /services | app/services/page.tsx |
-| 업무절차 | /guide | app/guide/page.tsx |
-| 블로그 | /blog | app/blog/page.tsx |
-| FAQ | /faq | app/faq/page.tsx |
-| 문의상담 | /contact | app/contact/page.tsx |
-| 블로그 관리자 | /admin/blog | app/admin/blog/page.tsx |
+| 홈 | / | src/app/page.tsx |
+| 회사소개 | /about | src/app/about/page.tsx |
+| 서비스안내 | /services | src/app/services/page.tsx |
+| 업무절차 | /guide | src/app/guide/page.tsx |
+| 블로그 | /blog | src/app/blog/page.tsx |
+| FAQ | /faq | src/app/faq/page.tsx |
+| 문의상담 | /contact | src/app/contact/page.tsx |
+
+> 블로그 글쓰기(`/blog/write`)·수정(`/blog/[slug]/edit`)은 로컬에서만 열리고, 배포 사이트에서는 404 처리됨
 
 ---
 
@@ -58,14 +60,25 @@
 
 ---
 
-## Supabase 데이터베이스 구조 (연동 예정)
+## 블로그 데이터 구조
 
-### contacts 테이블
-id, name, phone, inquiry_type, land_address, content, privacy_agreed, created_at
+블로그 글은 데이터베이스 없이 저장소 안 파일로 관리합니다.
 
-### blog_posts 테이블
-id, title, category, thumbnail_url, content, published_at, created_at
-- category: '업무사례' | '업계소식' | '공지사항' | '홍보'
+### content/posts/*.md
+파일 하나가 글 하나. 맨 위 메타데이터 + 그 아래 본문(HTML).
+```
+---
+title: 글 제목
+coverImage: /blog-images/파일명.jpg (없으면 null)
+createdAt: 작성 시각 (ISO)
+---
+본문 내용(HTML)
+```
+
+### public/blog-images/
+대표 이미지·본문 이미지 파일이 저장되는 곳
+
+> 예전에 쓰던 Supabase 프로젝트(twlgilmkqxzikvnzkisd)는 더 이상 코드에서 사용하지 않음. 남아있는 `posts`/`contacts` 테이블과 `blog-images` 버킷은 필요 없으면 Supabase 콘솔에서 직접 정리하면 됨.
 
 ---
 

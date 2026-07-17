@@ -18,7 +18,14 @@ function ensureDir() {
   }
 }
 
+// 영문 소문자·숫자·하이픈·언더스코어만 허용 — content/posts/ 밖 경로 접근 차단
+function isValidSlug(slug: string): boolean {
+  return /^[a-z0-9_-]+$/i.test(slug);
+}
+
 function readPostFile(slug: string): Post | null {
+  if (!isValidSlug(slug)) return null;
+
   const filePath = path.join(POSTS_DIR, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
 
@@ -54,6 +61,8 @@ export function createPost(input: {
   coverImage: string | null;
   content: string;
 }) {
+  if (!isValidSlug(input.slug)) throw new Error("Invalid slug");
+
   ensureDir();
   const file = matter.stringify(input.content, {
     title: input.title,
@@ -79,6 +88,8 @@ export function updatePost(
 }
 
 export function deletePost(slug: string) {
+  if (!isValidSlug(slug)) return;
+
   const filePath = path.join(POSTS_DIR, `${slug}.md`);
   if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 }
