@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import HeroSection from "../../components/HeroSection";
 import StepTimeline from "../../components/StepTimeline";
 import { FadeInSection } from "../../components/FadeInSection";
+
+export const metadata: Metadata = {
+  title: "업무절차",
+  description:
+    "상담부터 현장확인·서류준비·인허가 신청·완료까지, 횡성우림측량의 업무 진행 절차를 안내합니다.",
+};
 
 const steps = [
   { title: "상담", desc: "요구사항 확인 및 초기 상담 (예상 1~3일)" },

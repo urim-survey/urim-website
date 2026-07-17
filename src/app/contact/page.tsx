@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import HeroSection from "../../components/HeroSection";
 import { FadeInSection } from "../../components/FadeInSection";
+
+export const metadata: Metadata = {
+  title: "문의상담",
+  description:
+    "횡성우림측량 전화·카카오톡 상담 안내. 033-345-1253, 평일 09:00~19:00.",
+};
 
 // 카카오톡 채널 만들어지면 실제 채널 URL(https://pf.kakao.com/_xxxxx)로 교체
 const KAKAO_CHANNEL_URL = "#";

@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import HeroSection from "../../components/HeroSection";
 import FaqAccordion from "../../components/FaqAccordion";
 import { FadeInSection } from "../../components/FadeInSection";
+
+export const metadata: Metadata = {
+  title: "FAQ",
+  description: "측량 비용, 인허가 기간, 농지전용 가능 여부 등 자주 묻는 질문을 모았습니다.",
+};
 
 const faqs = [
   { q: "측량 비용은 어떻게 되나요?", a: "거리와 면적, 현장 조건에 따라 다릅니다. 문의주시면 견적 드립니다." },

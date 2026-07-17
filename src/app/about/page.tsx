@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import HeroSection from "../../components/HeroSection";
 import { FadeInSection } from "../../components/FadeInSection";
+
+export const metadata: Metadata = {
+  title: "회사소개",
+  description:
+    "횡성군청 실무 경력 10년, 강원 지역 전반의 토지측량·인허가를 담당하는 횡성우림측량을 소개합니다.",
+};
 
 const strengths = [
   {

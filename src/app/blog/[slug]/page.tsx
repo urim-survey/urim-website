@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -16,6 +17,30 @@ function getOtherPosts(currentSlug: string) {
   return getAllPosts()
     .filter((p) => p.slug !== currentSlug)
     .slice(0, 3);
+}
+
+function htmlToText(html: string): string {
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug: rawSlug } = await params;
+  const post = getPostBySlug(decodeURIComponent(rawSlug));
+  if (!post) return {};
+
+  const description = htmlToText(post.content).slice(0, 150);
+
+  return {
+    title: post.title,
+    description,
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description,
+      publishedTime: post.createdAt,
+      images: post.coverImage ? [post.coverImage] : undefined,
+    },
+  };
 }
 
 export default async function PostPage({ params }: Props) {

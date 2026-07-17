@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import HeroSection from "../../components/HeroSection";
 import BlogCard from "../../components/BlogCard";
 import { FadeInGrid, FadeInItem } from "../../components/FadeInSection";
 import { getAllPosts } from "../../lib/posts";
+
+export const metadata: Metadata = {
+  title: "블로그",
+  description: "횡성우림측량의 업무사례와 업계소식을 전해드립니다.",
+};
 
 export default async function BlogIndex() {
   const posts = getAllPosts();

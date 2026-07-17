@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import HeroSection from "../../components/HeroSection";
 import ServiceCard from "../../components/ServiceCard";
 import { FadeInSection, FadeInGrid, FadeInItem } from "../../components/FadeInSection";
+
+export const metadata: Metadata = {
+  title: "서비스안내",
+  description:
+    "개발행위허가·농지전용·산지전용·태양광 인허가·도로점용·현황측량까지, 횡성우림측량의 전문 서비스를 안내합니다.",
+};
 
 const services = [
   { id: "development", title: "개발행위허가", description: "토지 개발을 위한 인허가 전 과정(현장조사, 설계 협의, 신청 등)을 대행합니다.", imageSrc: "/images/service-1.jpg" },
