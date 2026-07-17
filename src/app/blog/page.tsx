@@ -2,22 +2,10 @@ import Link from "next/link";
 import HeroSection from "../../components/HeroSection";
 import BlogCard from "../../components/BlogCard";
 import { FadeInGrid, FadeInItem } from "../../components/FadeInSection";
-import { supabase } from "../../lib/supabase";
-
-export const revalidate = 60;
-
-async function getPosts() {
-  const { data, error } = await supabase
-    .from("posts")
-    .select("id, title, slug, cover_image, created_at")
-    .order("created_at", { ascending: false });
-
-  if (error) return [];
-  return data ?? [];
-}
+import { getAllPosts } from "../../lib/posts";
 
 export default async function BlogIndex() {
-  const posts = await getPosts();
+  const posts = getAllPosts();
 
   return (
     <div>
@@ -25,15 +13,6 @@ export default async function BlogIndex() {
 
       <section className="py-20">
         <div className="container">
-          <div className="flex justify-end mb-8">
-            <Link
-              href="/blog/write"
-              className="px-5 py-2.5 bg-ink text-white text-sm font-medium rounded-lg hover:bg-hover transition-colors"
-            >
-              + 새 글 작성
-            </Link>
-          </div>
-
           {posts.length === 0 ? (
             <div className="text-center py-20 text-secondary">
               아직 작성된 글이 없습니다.
@@ -41,16 +20,27 @@ export default async function BlogIndex() {
           ) : (
             <FadeInGrid className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {posts.map((p) => (
-                <FadeInItem key={p.id}>
+                <FadeInItem key={p.slug}>
                   <BlogCard
                     slug={p.slug}
                     title={p.title}
-                    date={p.created_at.slice(0, 10)}
-                    imageSrc={p.cover_image ?? "/images/blog-post-1.jpg"}
+                    date={p.createdAt.slice(0, 10)}
+                    imageSrc={p.coverImage ?? "/images/blog-post-1.jpg"}
                   />
                 </FadeInItem>
               ))}
             </FadeInGrid>
+          )}
+
+          {process.env.NODE_ENV !== "production" && (
+            <div className="flex justify-center mt-16">
+              <Link
+                href="/blog/write"
+                className="px-5 py-2.5 bg-ink text-white text-sm font-medium rounded-lg hover:bg-hover transition-colors"
+              >
+                + 새 글 작성
+              </Link>
+            </div>
           )}
         </div>
       </section>

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ ok: false }, { status: 404 });
+  }
+
   const { password } = await req.json().catch(() => ({}));
 
   if (!password) {

@@ -11,7 +11,6 @@ import { TextAlign } from "@tiptap/extension-text-align";
 import { Underline } from "@tiptap/extension-underline";
 import { Link } from "@tiptap/extension-link";
 import { ResizableImage } from "./ResizableImage";
-import { supabase } from "../lib/supabase";
 
 // ─── FontSize custom extension ────────────────────────────────────────────────
 declare module "@tiptap/core" {
@@ -136,24 +135,23 @@ export default function TipTapEditor({ content, onChange }: Props) {
     if (!file || !editor) return;
 
     setImageUploading(true);
-    const ext = file.name.split(".").pop();
-    const fileName = `body-${Date.now()}.${ext}`;
 
-    const { data, error } = await supabase.storage
-      .from("blog-images")
-      .upload(fileName, file, { upsert: true });
+    const formData = new FormData();
+    formData.append("file", file);
 
-    if (error) {
-      alert("이미지 업로드 실패: " + error.message);
+    const res = await fetch("/api/posts/upload-image", {
+      method: "POST",
+      body: formData,
+    });
+    const result = await res.json();
+
+    if (!res.ok || !result.ok) {
+      alert("이미지 업로드 실패");
       setImageUploading(false);
       return;
     }
 
-    const { data: urlData } = supabase.storage
-      .from("blog-images")
-      .getPublicUrl(data.path);
-
-    editor.chain().focus().setImage({ src: urlData.publicUrl }).run();
+    editor.chain().focus().setImage({ src: result.path }).run();
     setImageUploading(false);
     if (imageInputRef.current) imageInputRef.current.value = "";
   };

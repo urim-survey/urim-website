@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
-import WriteForm from "./WriteForm";
+import EditForm from "./EditForm";
 
-export default function WritePage() {
+export default function EditPage() {
   if (process.env.NODE_ENV === "production") {
     notFound();
   }
 
-  return <WriteForm />;
+  return <EditForm />;
 }

@@ -1,39 +1,29 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { supabase } from "../../../lib/supabase";
+import { getAllPosts, getPostBySlug } from "../../../lib/posts";
+import PostActions from "./PostActions";
 
-export const revalidate = 60;
+export const dynamicParams = false;
 
 type Props = { params: Promise<{ slug: string }> };
 
-async function getPost(slug: string) {
-  const { data } = await supabase
-    .from("posts")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-  return data;
+export async function generateStaticParams() {
+  return getAllPosts().map((p) => ({ slug: p.slug }));
 }
 
-async function getOtherPosts(currentSlug: string) {
-  const { data } = await supabase
-    .from("posts")
-    .select("id, title, slug, cover_image, created_at")
-    .neq("slug", currentSlug)
-    .order("created_at", { ascending: false })
-    .limit(3);
-  return data ?? [];
+function getOtherPosts(currentSlug: string) {
+  return getAllPosts()
+    .filter((p) => p.slug !== currentSlug)
+    .slice(0, 3);
 }
 
 export default async function PostPage({ params }: Props) {
   const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
 
-  const [post, otherPosts] = await Promise.all([
-    getPost(slug),
-    getOtherPosts(slug),
-  ]);
+  const post = getPostBySlug(slug);
+  const otherPosts = getOtherPosts(slug);
 
   if (!post) return notFound();
 
@@ -42,19 +32,22 @@ export default async function PostPage({ params }: Props) {
       {/* ── 제목 · 날짜 (상단 가운데 정렬) ── */}
       <div className="container max-w-3xl pt-14 pb-10 text-center">
         <p className="text-sm text-secondary mb-3 tracking-wide">
-          {post.created_at.slice(0, 10)}
+          {post.createdAt.slice(0, 10)}
         </p>
         <h1 className="text-3xl md:text-4xl font-bold text-ink leading-tight">
           {post.title}
         </h1>
       </div>
 
+      {/* ── 관리자 수정·삭제 버튼 (인증 시에만 표시) ── */}
+      <PostActions slug={post.slug} />
+
       {/* ── 썸네일 (뿌옇게) ── */}
-      {post.cover_image && (
+      {post.coverImage && (
         <div className="relative w-full h-64 md:h-[420px] overflow-hidden">
           {/* 살짝 blur + 확대(scale-105)로 blur 경계 흰 테두리 방지 */}
           <Image
-            src={post.cover_image}
+            src={post.coverImage}
             alt={post.title}
             fill
             className="object-cover scale-[1.02] blur-[1px]"
@@ -81,15 +74,15 @@ export default async function PostPage({ params }: Props) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {otherPosts.map((p) => (
                 <Link
-                  key={p.id}
+                  key={p.slug}
                   href={`/blog/${encodeURIComponent(p.slug)}`}
                   className="group block"
                 >
                   {/* 썸네일 */}
                   <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-bg-soft mb-3">
-                    {p.cover_image ? (
+                    {p.coverImage ? (
                       <Image
-                        src={p.cover_image}
+                        src={p.coverImage}
                         alt={p.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -100,7 +93,7 @@ export default async function PostPage({ params }: Props) {
                   </div>
                   {/* 날짜 · 제목 */}
                   <p className="text-xs text-secondary mb-1">
-                    {p.created_at.slice(0, 10)}
+                    {p.createdAt.slice(0, 10)}
                   </p>
                   <h3 className="text-sm font-semibold text-ink group-hover:text-secondary transition-colors line-clamp-2">
                     {p.title}
