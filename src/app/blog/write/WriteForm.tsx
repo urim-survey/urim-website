@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { CATEGORIES } from "../../../lib/categories";
 
 const TipTapEditor = dynamic(() => import("../../../components/TipTapEditor"), {
   ssr: false,
@@ -81,6 +82,7 @@ export default function WriteForm() {
   const [authed, setAuthed] = useState(false);
   const [checking, setChecking] = useState(true);  // 세션 확인 중
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
@@ -141,6 +143,7 @@ export default function WriteForm() {
         title: title.trim(),
         content,
         coverImage: coverImage || null,
+        category: category || null,
       }),
     });
 
@@ -180,6 +183,23 @@ export default function WriteForm() {
           placeholder="글 제목을 입력하세요"
           className="w-full px-4 py-3 border border-line rounded-lg text-ink placeholder:text-secondary focus:outline-none focus:border-ink"
         />
+      </div>
+
+      {/* 카테고리 */}
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-secondary mb-1">
+          카테고리 <span className="text-xs">(선택)</span>
+        </label>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="w-full px-4 py-3 border border-line rounded-lg text-ink focus:outline-none focus:border-ink bg-white"
+        >
+          <option value="">선택 안 함</option>
+          {CATEGORIES.map((c) => (
+            <option key={c.id} value={c.id}>{c.label}</option>
+          ))}
+        </select>
       </div>
 
       {/* 대표 이미지 업로드 */}

@@ -16,6 +16,7 @@ export async function POST(req: Request) {
       slug: body.slug,
       title: body.title,
       coverImage: body.coverImage || null,
+      category: body.category || null,
       content: body.content,
     });
     return NextResponse.json({ ok: true, slug: body.slug });

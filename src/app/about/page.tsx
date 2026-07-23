@@ -8,6 +8,9 @@ export const metadata: Metadata = {
     "횡성군청 실무 경력 10년, 강원 지역 전반의 토지측량·인허가를 담당하는 횡성우림측량을 소개합니다.",
 };
 
+const MAP_ADDRESS = "강원특별자치도 횡성군 태기로 16";
+const MAP_EMBED_SRC = `https://www.google.com/maps?q=${encodeURIComponent(MAP_ADDRESS)}&output=embed`;
+
 const strengths = [
   {
     title: "10년 실무 경력",
@@ -68,8 +71,15 @@ export default function AboutPage() {
           <h2 className="text-2xl md:text-3xl font-bold mt-3 mb-6 text-ink">오시는 길</h2>
           <div className="text-ink">강원특별자치도 횡성군 태기로 16, 3층 302호</div>
           <div className="mt-1 text-secondary">전화: 033-345-1253</div>
-          <div className="mt-6 w-full h-72 bg-bg-soft flex items-center justify-center text-secondary text-sm">
-            구글 지도 위치 삽입 예정
+          <div className="mt-6 w-full h-72 rounded-lg overflow-hidden border border-line">
+            <iframe
+              src={MAP_EMBED_SRC}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       </section>

@@ -34,7 +34,7 @@ export default function ServicesPage() {
           <FadeInGrid className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {services.map((s) => (
               <FadeInItem key={s.id}>
-                <ServiceCard title={s.title} description={s.description} href={`#${s.id}`} imageSrc={s.imageSrc} />
+                <ServiceCard title={s.title} description={s.description} href={`/blog/category/${s.id}`} imageSrc={s.imageSrc} />
               </FadeInItem>
             ))}
           </FadeInGrid>

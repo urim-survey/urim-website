@@ -70,13 +70,13 @@ export default function PostActions({ slug }: Props) {
       <div className="flex justify-center gap-3 mt-5">
         <button
           onClick={() => router.push(`/blog/${encodeURIComponent(slug)}/edit`)}
-          className="px-4 py-1.5 text-xs border border-line text-secondary rounded-md hover:border-ink hover:text-ink transition-colors"
+          className="px-4 py-1.5 text-xs bg-ink text-white rounded-md hover:bg-hover transition-colors"
         >
           수정
         </button>
         <button
           onClick={() => setShowDeleteModal(true)}
-          className="px-4 py-1.5 text-xs border border-line text-secondary rounded-md hover:border-red-400 hover:text-red-500 transition-colors"
+          className="px-4 py-1.5 text-xs bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
         >
           삭제
         </button>

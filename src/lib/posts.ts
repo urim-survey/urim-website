@@ -8,6 +8,7 @@ export type Post = {
   slug: string;
   title: string;
   coverImage: string | null;
+  category: string | null;
   createdAt: string;
   content: string;
 };
@@ -36,6 +37,7 @@ function readPostFile(slug: string): Post | null {
     slug,
     title: data.title ?? "",
     coverImage: data.coverImage ?? null,
+    category: data.category ?? null,
     createdAt: data.createdAt ?? "",
     content,
   };
@@ -51,6 +53,10 @@ export function getAllPosts(): Post[] {
   return posts.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 }
 
+export function getPostsByCategory(category: string): Post[] {
+  return getAllPosts().filter((p) => p.category === category);
+}
+
 export function getPostBySlug(slug: string): Post | null {
   return readPostFile(slug);
 }
@@ -59,6 +65,7 @@ export function createPost(input: {
   slug: string;
   title: string;
   coverImage: string | null;
+  category: string | null;
   content: string;
 }) {
   if (!isValidSlug(input.slug)) throw new Error("Invalid slug");
@@ -67,6 +74,7 @@ export function createPost(input: {
   const file = matter.stringify(input.content, {
     title: input.title,
     coverImage: input.coverImage,
+    category: input.category,
     createdAt: new Date().toISOString(),
   });
   fs.writeFileSync(path.join(POSTS_DIR, `${input.slug}.md`), file, "utf-8");
@@ -74,7 +82,7 @@ export function createPost(input: {
 
 export function updatePost(
   slug: string,
-  input: { title: string; coverImage: string | null; content: string }
+  input: { title: string; coverImage: string | null; category: string | null; content: string }
 ) {
   const existing = readPostFile(slug);
   if (!existing) throw new Error("Post not found");
@@ -82,6 +90,7 @@ export function updatePost(
   const file = matter.stringify(input.content, {
     title: input.title,
     coverImage: input.coverImage,
+    category: input.category,
     createdAt: existing.createdAt,
   });
   fs.writeFileSync(path.join(POSTS_DIR, `${slug}.md`), file, "utf-8");

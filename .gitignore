@@ -48,3 +48,6 @@ next-env.d.ts
 
 # redundant raw asset archive (already extracted into public/images)
 public/images/images.zip
+
+# blog raw source docs (고객 개인정보 포함 원본 인허가 서류) - 절대 커밋 금지
+/blogs/
